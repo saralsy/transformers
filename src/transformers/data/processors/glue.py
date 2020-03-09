@@ -515,7 +515,7 @@ class WnliProcessor(DataProcessor):
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
     
-class BoolqProcessor(DataProcessor):
+class BoolQProcessor(DataProcessor):
 	"""Processor for the BoolQ data set (GLUE version)."""
     def get_example_from_tensor_dict(self, tensor_dict):
             """See base class."""
