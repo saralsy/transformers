@@ -52,7 +52,11 @@ if _has_sklearn:
 
     def glue_compute_metrics(task_name, preds, labels):
         assert len(preds) == len(labels)
-        if task_name == "cola":
+        ##### HW4 #####
+        if task_name == "boolq":
+            return {"acc": simple_accuracy(preds, labels)}
+        ##### /HW4 #####
+        elif task_name == "cola":
             return {"mcc": matthews_corrcoef(labels, preds)}
         elif task_name == "sst-2":
             return {"acc": simple_accuracy(preds, labels)}
