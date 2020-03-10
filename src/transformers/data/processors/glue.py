@@ -515,8 +515,47 @@ class WnliProcessor(DataProcessor):
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
 
+##### HW4 #####
+import json
+class BoolqProcessor(DataProcessor):
+    """Processor for the Boolq data set (GLUE version)."""
+    
+    def get_example_from_tensor_dict(self, tensor_dict):
+        return InputExample(
+            tensor_dict["idx"].numpy(),
+            tensor_dict["passage"].numpy().decode("utf-8"),
+            tensor_dict["question"].numpy().decode("utf-8"),
+            str(tensor_dict["label"].numpy()),
+        )
+    
+    def _read_jsonl(self, file_path):
+        return [json.loads(line) for line in open(file_path).read().splitlines()]
+            
+    def get_train_examples(self, data_dir):
+        return self._create_examples(self._read_jsonl(os.path.join(data_dir, "train.jsonl")), "train")
+    
+    def get_dev_examples(self, data_dir):
+        return self._create_examples(self._read_jsonl(os.path.join(data_dir, "val.jsonl")), "dev")
+    
+    def get_labels(self):
+        return ['True', 'False']
+
+    def _create_examples(self, lines, set_type):
+        examples = []
+        for line in lines:
+            guid = "%s-%s" % (set_type, line['idx'])
+            text_a = line['passage']
+            text_b = line['question']
+            label = str(line['label'])
+            examples.append(InputExample(guid=guid, 
+                                         text_a=text_a, 
+                                         text_b=text_b, 
+                                         label=label))
+        return examples
+##### /HW4 #####
 
 glue_tasks_num_labels = {
+    "boolq": 2, ##### HW4 #####
     "cola": 2,
     "mnli": 3,
     "mrpc": 2,
@@ -529,6 +568,7 @@ glue_tasks_num_labels = {
 }
 
 glue_processors = {
+    "boolq": BoolqProcessor, ##### HW4 #####
     "cola": ColaProcessor,
     "mnli": MnliProcessor,
     "mnli-mm": MnliMismatchedProcessor,
@@ -542,6 +582,7 @@ glue_processors = {
 }
 
 glue_output_modes = {
+    "boolq": "classification", ##### HW4 #####
     "cola": "classification",
     "mnli": "classification",
     "mnli-mm": "classification",
