@@ -17,6 +17,7 @@
 
 import logging
 import os
+import json
 
 from ...file_utils import is_tf_available
 from .utils import DataProcessor, InputExample, InputFeatures
@@ -529,15 +530,15 @@ class BoolQProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+        return self._create_examples(read_jsonl(os.path.join(data_dir, "train.jsonl")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+        return self._create_examples(read_jsonl(os.path.join(data_dir, "dev.jsonl")), "dev")
 
     def get_labels(self):
         """See base class."""
-        return ["0", "1"]
+        return ["true", "false"]
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
@@ -551,9 +552,13 @@ class BoolQProcessor(DataProcessor):
             label = line[-1]
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
-    
 
-
+    def read_jsonl(self, inputfile):
+        """Reads BoolQ dataset that contains jsonl format."""
+	with open("train.jsonl", 'r') as f:
+            for line in lines:
+		line = json.loads(line) 
+	    return line
 
 glue_tasks_num_labels = {
     "cola": 2,
