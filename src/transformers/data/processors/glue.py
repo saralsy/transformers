@@ -519,7 +519,7 @@ class WnliProcessor(DataProcessor):
 class BoolQProcessor(DataProcessor):
 	"""Processor for the BoolQ data set (GLUE version)."""
     
-    def _read_jsonl(self, file_path):
+    def read_jsonl(self, cls, file_path):
         return [json.loads(line) for line in open(file_path).read().splitlines()]
 
     def get_example_from_tensor_dict(self, tensor_dict):
@@ -533,11 +533,11 @@ class BoolQProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(read_jsonl(os.path.join(data_dir, "train.jsonl")), "train")
+        return self._create_examples(self.read_jsonl(os.path.join(data_dir, "train.jsonl")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(read_jsonl(os.path.join(data_dir, "dev.jsonl")), "dev")
+        return self._create_examples(self.read_jsonl(os.path.join(data_dir, "dev.jsonl")), "dev")
 
     def get_labels(self):
         """See base class."""
