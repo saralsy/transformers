@@ -518,7 +518,10 @@ class WnliProcessor(DataProcessor):
     
 class BoolQProcessor(DataProcessor):
 	"""Processor for the BoolQ data set (GLUE version)."""
-	
+    
+    def _read_jsonl(self, file_path):
+        return [json.loads(line) for line in open(file_path).read().splitlines()]
+
     def get_example_from_tensor_dict(self, tensor_dict):
         """See base class."""
         return InputExample(
@@ -553,12 +556,6 @@ class BoolQProcessor(DataProcessor):
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
 
-    def read_jsonl(cls, inputfile):
-        """Reads BoolQ dataset that contains jsonl format."""
-	with open("train.jsonl", 'r') as f:
-            for line in lines:
-		line = json.loads(line) 
-	    return line
 
 glue_tasks_num_labels = {
     "cola": 2,
