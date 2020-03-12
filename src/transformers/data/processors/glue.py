@@ -553,7 +553,7 @@ class BoolQProcessor(DataProcessor):
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
 
-    def read_jsonl(self, inputfile):
+    def read_jsonl(cls, inputfile):
         """Reads BoolQ dataset that contains jsonl format."""
 	with open("train.jsonl", 'r') as f:
             for line in lines:
